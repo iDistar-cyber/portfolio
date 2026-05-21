@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 350" width="100%" height="100%">
+  <rect width="100%" height="100%" fill="#0e1015"/>
+  <defs>
+    <radialGradient id="cyan-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00e5ff" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#00e5ff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- Technical Grid -->
+  <path d="M 0,35 L 600,35 M 0,70 L 600,70 M 0,105 L 600,105 M 0,140 L 600,140 M 0,175 L 600,175 M 0,210 L 600,210 M 0,245 L 600,245 M 0,280 L 600,280 M 0,315 L 600,315" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+  <path d="M 50,0 L 50,350 M 100,0 L 100,350 M 150,0 L 150,350 M 200,0 L 200,350 M 250,0 L 250,350 M 300,0 L 300,350 M 350,0 L 350,350 M 400,0 L 400,350 M 450,0 L 450,350 M 500,0 L 500,350 M 550,0 L 550,350" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+  <rect x="0" y="0" width="600" height="350" fill="url(#cyan-glow)"/>
+
+  <!-- Technical Axis and Blueprint circles -->
+  <circle cx="300" cy="175" r="130" stroke="rgba(0, 229, 255, 0.08)" stroke-width="1" fill="none"/>
+  <circle cx="300" cy="175" r="90" stroke="rgba(0, 229, 255, 0.15)" stroke-width="1" fill="none" stroke-dasharray="3 3"/>
+  <circle cx="300" cy="175" r="50" stroke="rgba(0, 229, 255, 0.2)" stroke-width="1" fill="none"/>
+  
+  <!-- CNC Laser Cutting Path Simulation (glowing cyan / blue) -->
+  <path d="M 210,125 L 390,125 L 430,175 L 390,225 L 210,225 L 170,175 Z" stroke="#00e5ff" stroke-width="2.5" fill="none" stroke-linejoin="round" filter="drop-shadow(0 0 8px rgba(0, 229, 255, 0.5))"/>
+  
+  <!-- Dimension lines and helper arrows -->
+  <!-- Width Dimension -->
+  <line x1="170" y1="175" x2="170" y2="70" stroke="rgba(255, 255, 255, 0.2)" stroke-width="0.8" stroke-dasharray="2 2"/>
+  <line x1="430" y1="175" x2="430" y2="70" stroke="rgba(255, 255, 255, 0.2)" stroke-width="0.8" stroke-dasharray="2 2"/>
+  <line x1="170" y1="80" x2="430" y2="80" stroke="rgba(0, 229, 255, 0.4)" stroke-width="1"/>
+  <polygon points="170,80 178,76 178,84" fill="#00e5ff"/>
+  <polygon points="430,80 422,76 422,84" fill="#00e5ff"/>
+  <text x="300" y="74" fill="#00e5ff" font-family="'JetBrains Mono', monospace" font-size="10" text-anchor="middle">W: 260.00 mm</text>
+
+  <!-- Height Dimension -->
+  <line x1="210" y1="125" x2="120" y2="125" stroke="rgba(255, 255, 255, 0.2)" stroke-width="0.8" stroke-dasharray="2 2"/>
+  <line x1="210" y1="225" x2="120" y2="225" stroke="rgba(255, 255, 255, 0.2)" stroke-width="0.8" stroke-dasharray="2 2"/>
+  <line x1="130" y1="125" x2="130" y2="225" stroke="rgba(0, 229, 255, 0.4)" stroke-width="1"/>
+  <polygon points="130,125 126,133 134,133" fill="#00e5ff"/>
+  <polygon points="130,225 126,217 134,217" fill="#00e5ff"/>
+  <text x="110" y="180" fill="#00e5ff" font-family="'JetBrains Mono', monospace" font-size="10" text-anchor="middle" transform="rotate(-90 110 180)">H: 100.00 mm</text>
+
+  <!-- CNC Node Markers -->
+  <circle cx="210" cy="125" r="3" fill="#ffffff" stroke="#00e5ff" stroke-width="1.5"/>
+  <circle cx="390" cy="125" r="3" fill="#ffffff" stroke="#00e5ff" stroke-width="1.5"/>
+  <circle cx="430" cy="175" r="3" fill="#ffffff" stroke="#00e5ff" stroke-width="1.5"/>
+  <circle cx="390" cy="225" r="3" fill="#ffffff" stroke="#00e5ff" stroke-width="1.5"/>
+  <circle cx="210" cy="225" r="3" fill="#ffffff" stroke="#00e5ff" stroke-width="1.5"/>
+  <circle cx="170" cy="175" r="3" fill="#ffffff" stroke="#00e5ff" stroke-width="1.5"/>
+
+  <!-- Angle indicator -->
+  <path d="M 390,125 A 30,30 0 0,1 411.2,151.2" stroke="#ccff00" stroke-width="1" fill="none"/>
+  <text x="415" y="135" fill="#ccff00" font-family="'JetBrains Mono', monospace" font-size="9">45°</text>
+
+  <!-- HUD Text -->
+  <text x="35" y="55" fill="#00e5ff" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" letter-spacing="1">CAD.ENGINE // CNC_PREP_V3</text>
+  <text x="35" y="315" fill="rgba(255,255,255,0.3)" font-family="'JetBrains Mono', monospace" font-size="10">KERF: 0.15mm | CLOSED_LOOPS: 1 | G-CODE COMPATIBLE</text>
+  <text x="565" y="315" fill="#ccff00" font-family="'JetBrains Mono', monospace" font-size="10" text-anchor="end">STATUS: OK</text>
+  
+  <!-- Corner Tech Brackets -->
+  <path d="M 20,40 L 20,20 L 40,20" stroke="rgba(0, 229, 255, 0.4)" stroke-width="1.5" fill="none"/>
+  <path d="M 580,40 L 580,20 L 560,20" stroke="rgba(0, 229, 255, 0.4)" stroke-width="1.5" fill="none"/>
+  <path d="M 20,310 L 20,330 L 40,330" stroke="rgba(0, 229, 255, 0.4)" stroke-width="1.5" fill="none"/>
+  <path d="M 580,310 L 580,330 L 560,330" stroke="rgba(0, 229, 255, 0.4)" stroke-width="1.5" fill="none"/>
+</svg>

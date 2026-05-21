@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 350" width="100%" height="100%">
+  <rect width="100%" height="100%" fill="#0e1015"/>
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ccff00" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#ccff00" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- Technical Grid -->
+  <path d="M 0,35 L 600,35 M 0,70 L 600,70 M 0,105 L 600,105 M 0,140 L 600,140 M 0,175 L 600,175 M 0,210 L 600,210 M 0,245 L 600,245 M 0,280 L 600,280 M 0,315 L 600,315" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+  <path d="M 50,0 L 50,350 M 100,0 L 100,350 M 150,0 L 150,350 M 200,0 L 200,350 M 250,0 L 250,350 M 300,0 L 300,350 M 350,0 L 350,350 M 400,0 L 400,350 M 450,0 L 450,350 M 500,0 L 500,350 M 550,0 L 550,350" stroke="rgba(255,255,255,0.02)" stroke-width="1"/>
+  <rect x="0" y="0" width="600" height="350" fill="url(#glow)"/>
+  
+  <!-- Outer circle design helper -->
+  <circle cx="300" cy="175" r="110" stroke="rgba(255, 255, 255, 0.03)" stroke-width="1" fill="none" stroke-dasharray="4 4"/>
+  <circle cx="300" cy="175" r="90" stroke="rgba(204, 255, 0, 0.1)" stroke-width="1" fill="none"/>
+  
+  <!-- Geometric grid axes -->
+  <line x1="300" y1="30" x2="300" y2="320" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1" stroke-dasharray="2 4"/>
+  <line x1="100" y1="175" x2="500" y2="175" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1" stroke-dasharray="2 4"/>
+  
+  <!-- Cyberpunk Vector Logo Outline -->
+  <path d="M 300,75 L 390,230 L 210,230 Z" stroke="rgba(204, 255, 0, 0.2)" stroke-width="1" fill="none"/>
+  <path d="M 300,90 C 370,90 380,210 330,210 C 300,210 300,160 300,140 C 300,160 300,210 270,210 C 220,210 230,90 300,90 Z" stroke="#ccff00" stroke-width="3.5" fill="none" filter="drop-shadow(0 0 10px rgba(204, 255, 0, 0.6))"/>
+  
+  <!-- Vector Handles and Anchor Points -->
+  <!-- Top Node -->
+  <line x1="300" y1="90" x2="350" y2="90" stroke="#00e5ff" stroke-width="1.2"/>
+  <line x1="300" y1="90" x2="250" y2="90" stroke="#00e5ff" stroke-width="1.2"/>
+  <circle cx="350" cy="90" r="4.5" fill="#0a0b0e" stroke="#00e5ff" stroke-width="1.5"/>
+  <circle cx="250" cy="90" r="4.5" fill="#0a0b0e" stroke="#00e5ff" stroke-width="1.5"/>
+  <rect x="295" y="85" width="10" height="10" fill="#ccff00" stroke="#0a0b0e" stroke-width="2"/>
+  
+  <!-- Center Left Node -->
+  <line x1="270" y1="210" x2="270" y2="170" stroke="#00e5ff" stroke-width="1.2"/>
+  <circle cx="270" cy="170" r="4.5" fill="#0a0b0e" stroke="#00e5ff" stroke-width="1.5"/>
+  <rect x="265" y="205" width="10" height="10" fill="#ccff00" stroke="#0a0b0e" stroke-width="2"/>
+  
+  <!-- Center Right Node -->
+  <line x1="330" y1="210" x2="330" y2="170" stroke="#00e5ff" stroke-width="1.2"/>
+  <circle cx="330" cy="170" r="4.5" fill="#0a0b0e" stroke="#00e5ff" stroke-width="1.5"/>
+  <rect x="325" y="205" width="10" height="10" fill="#ccff00" stroke="#0a0b0e" stroke-width="2"/>
+  
+  <!-- Interface HUD Elements -->
+  <text x="35" y="55" fill="#ccff00" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" letter-spacing="1">CURVE.ENG_V2 // LOGO_TRACE</text>
+  <text x="35" y="315" fill="rgba(255,255,255,0.3)" font-family="'JetBrains Mono', monospace" font-size="10">POINTS: 18 ACTIVE | BEZIER TENSION: 0.72</text>
+  <text x="490" y="55" fill="rgba(255,255,255,0.3)" font-family="'JetBrains Mono', monospace" font-size="10" text-anchor="end">GRID: 50x50px</text>
+  
+  <!-- Outer brutalist design bracket -->
+  <path d="M 20,40 L 20,20 L 40,20" stroke="rgba(204, 255, 0, 0.4)" stroke-width="1.5" fill="none"/>
+  <path d="M 580,40 L 580,20 L 560,20" stroke="rgba(204, 255, 0, 0.4)" stroke-width="1.5" fill="none"/>
+  <path d="M 20,310 L 20,330 L 40,330" stroke="rgba(204, 255, 0, 0.4)" stroke-width="1.5" fill="none"/>
+  <path d="M 580,310 L 580,330 L 560,330" stroke="rgba(204, 255, 0, 0.4)" stroke-width="1.5" fill="none"/>
+</svg>
