@@ -1,1518 +1,317 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ВЕКТОР / ГЕОМЕТРИЯ — Профессиональная векторизация для ЧПУ, лазера и плоттеров</title>
-    <meta name="description" content="Ручная отрисовка растра и эскизов любой сложности в идеальные замкнутые контуры для ЧПУ, лазера и плоттеров. Без мусора и автотрассировки.">
-    
-    <!-- Google Fonts -->
+    <title>iDistar — Визуальная и техническая поддержка бизнеса</title>
+    <meta name="description"
+        content="Векторная графика, парсинг данных, разработка сайтов. Визуальная и техническая поддержка вашего бизнеса.">
+
+    <!-- Fonts: Serif for headings, Sans-serif for body -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <style>
-        /* CSS Reset & Variables */
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        :root {
-            /* Theme Colors - Cyber Tech Minimalist */
-            --bg-deep: #0a0b0e;
-            --bg-surface: rgba(18, 20, 26, 0.7);
-            --bg-surface-opaque: #12141a;
-            --accent: #ccff00; /* Cyber Lime */
-            --accent-glow: rgba(204, 255, 0, 0.2);
-            --accent-glow-strong: rgba(204, 255, 0, 0.4);
-            --text-primary: #ffffff;
-            --text-secondary: #a3a3a3;
-            --text-dark: #000000;
-            --vector-blue: #00e5ff; /* Cyan for anchor handles */
-            --vector-blue-glow: rgba(0, 229, 255, 0.3);
-            
-            --border-thin: 1px solid rgba(255, 255, 255, 0.08);
-            --border-accent: 1px solid rgba(204, 255, 0, 0.3);
-            
-            --font-headings: 'Space Grotesk', 'Inter', sans-serif;
-            --font-body: 'Inter', sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
-            
-            --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            --transition-bounce: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        body {
-            background-color: var(--bg-deep);
-            color: var(--text-primary);
-            font-family: var(--font-body);
-            line-height: 1.6;
-            overflow-x: hidden;
-            position: relative;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* Subtle CAD Technical Grid Background */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.012) 1px, transparent 1px);
-            background-size: 50px 50px;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        /* Header Styles */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 80px;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            background-color: rgba(10, 11, 14, 0.8);
-            border-bottom: var(--border-thin);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 10%;
-        }
-
-        .logo {
-            font-family: var(--font-headings);
-            font-weight: 700;
-            font-size: 1.15rem;
-            letter-spacing: 2px;
-            text-decoration: none;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .logo span {
-            color: var(--accent);
-            text-shadow: 0 0 10px var(--accent-glow);
-        }
-
-        .logo-dot {
-            width: 6px;
-            height: 6px;
-            background-color: var(--accent);
-            box-shadow: 0 0 10px var(--accent);
-            border-radius: 50%;
-        }
-
-        /* Sleek Technical Link Buttons */
-        .btn-telegram-header {
-            font-family: var(--font-mono);
-            font-size: 0.85rem;
-            font-weight: 500;
-            text-decoration: none;
-            color: var(--text-primary);
-            background-color: transparent;
-            border: 1px solid var(--text-primary);
-            padding: 8px 16px;
-            border-radius: 2px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: var(--transition-smooth);
-        }
-
-        .btn-telegram-header:hover {
-            color: var(--text-dark);
-            background-color: var(--text-primary);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-            border-color: var(--text-primary);
-        }
-
-        .btn-telegram-header svg {
-            fill: currentColor;
-            width: 14px;
-            height: 14px;
-        }
-
-        /* Main Container Layout */
-        main {
-            padding-top: 120px;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding-left: 20px;
-            padding-right: 20px;
-        }
-
-        /* Hero Section */
-        .hero {
-            display: grid;
-            grid-template-columns: 1.1fr 0.9fr;
-            gap: 40px;
-            align-items: center;
-            min-height: calc(80vh - 120px);
-            padding: 40px 0 80px 0;
-            border-bottom: var(--border-thin);
-            position: relative;
-        }
-
-        /* Ambient Cyber Glow behind hero */
-        .hero::after {
-            content: '';
-            position: absolute;
-            top: 20%;
-            left: -10%;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(204, 255, 0, 0.05) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .hero-content {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        .tagline {
-            font-family: var(--font-mono);
-            font-size: 0.85rem;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .tagline::before {
-            content: '';
-            width: 20px;
-            height: 1px;
-            background-color: var(--accent);
-        }
-
-        h1 {
-            font-family: var(--font-headings);
-            font-weight: 700;
-            font-size: 3.5rem;
-            line-height: 1.1;
-            letter-spacing: -1px;
-            color: var(--text-primary);
-        }
-
-        .hero h1 span {
-            color: var(--text-primary);
-            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.4);
-            text-stroke: 1px rgba(255, 255, 255, 0.4);
-            color: transparent;
-        }
-
-        .hero-subtitle {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            max-width: 580px;
-            line-height: 1.6;
-        }
-
-        .hero-subtitle strong {
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-
-        /* Brutalist Button Style */
-        .btn-cta {
-            align-self: flex-start;
-            font-family: var(--font-headings);
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text-dark);
-            background-color: var(--accent);
-            border: 2px solid var(--accent);
-            padding: 16px 36px;
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            position: relative;
-            box-shadow: 5px 5px 0 0 var(--text-primary);
-            transition: var(--transition-bounce);
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .btn-cta:hover {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0 0 var(--text-primary);
-            background-color: var(--accent);
-        }
-
-        .btn-cta:active {
-            transform: translate(5px, 5px);
-            box-shadow: 0px 0px 0 0 var(--text-primary);
-        }
-
-        .btn-cta svg {
-            width: 20px;
-            height: 20px;
-            fill: var(--text-dark);
-        }
-
-        /* Hero Image/Graphic side */
-        .hero-graphic {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-        }
-
-        .cad-frame {
-            border: var(--border-thin);
-            width: 100%;
-            aspect-ratio: 1;
-            max-width: 440px;
-            background-color: rgba(18, 20, 26, 0.4);
-            position: relative;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-        }
-
-        .cad-corners::before,
-        .cad-corners::after,
-        .cad-frame::before,
-        .cad-frame::after {
-            content: '';
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            border-color: var(--accent);
-            border-style: solid;
-            pointer-events: none;
-        }
-
-        /* CAD Frame Corners (Brutalist visual aids) */
-        .cad-frame::before { top: -2px; left: -2px; border-width: 2px 0 0 2px; }
-        .cad-frame::after { top: -2px; right: -2px; border-width: 2px 2px 0 0; }
-        
-        .cad-corners {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-        .cad-corners::before { bottom: -2px; left: -2px; border-width: 0 0 2px 2px; }
-        .cad-corners::after { bottom: -2px; right: -2px; border-width: 0 2px 2px 0; }
-
-        .cad-header {
-            display: flex;
-            justify-content: space-between;
-            font-family: var(--font-mono);
-            font-size: 0.65rem;
-            color: var(--text-secondary);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            padding-bottom: 8px;
-        }
-
-        .cad-grid-display {
-            flex-grow: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Simulated Radar / Sweep animation */
-        .cad-grid-display::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(204, 255, 0, 0.03), transparent);
-            animation: radar-sweep 6s infinite linear;
-        }
-
-        @keyframes radar-sweep {
-            0% { left: -100%; }
-            100% { left: 200%; }
-        }
-
-        .cad-footer-text {
-            font-family: var(--font-mono);
-            font-size: 0.65rem;
-            color: var(--accent);
-            display: flex;
-            justify-content: space-between;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding-top: 8px;
-        }
-
-        /* Interactive Hero Geometry Styles */
-        .anchor-point {
-            transition: r 0.15s cubic-bezier(0.16, 1, 0.3, 1), fill 0.15s ease, stroke 0.15s ease, filter 0.15s ease;
-        }
-        .anchor-point:hover {
-            r: 8px;
-            fill: var(--accent) !important;
-            stroke: #ffffff !important;
-            filter: drop-shadow(0 0 6px var(--accent-glow-strong));
-        }
-        .anchor-point.active {
-            r: 9px;
-            fill: var(--accent) !important;
-            stroke: #ffffff !important;
-            filter: drop-shadow(0 0 10px var(--accent));
-        }
-
-        /* Portfolio Showcase (Before/After Section) */
-        .showcase {
-            padding: 100px 0;
-            border-bottom: var(--border-thin);
-            position: relative;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        h2 {
-            font-family: var(--font-headings);
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            letter-spacing: -0.5px;
-            margin-bottom: 12px;
-        }
-
-        .section-subtitle {
-            font-size: 1.05rem;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* The Custom Interactive Comparison Slider */
-        .slider-wrapper {
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-            border: var(--border-thin);
-            border-radius: 16px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 0, 0, 0.3);
-            aspect-ratio: 16 / 9;
-            background-color: #0e0f13;
-            overflow: hidden;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-
-        .slider-img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            pointer-events: none;
-        }
-
-        .slider-after-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 50%;
-            height: 100%;
-            overflow: hidden;
-            z-index: 2;
-        }
-
-        .img-before {
-            z-index: 1;
-        }
-
-        .img-after {
-            z-index: 2;
-            width: 800px;
-            max-width: none;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .slider-separator {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 50%;
-            width: 2px;
-            background-color: var(--accent);
-            z-index: 3;
-            pointer-events: none;
-            box-shadow: 0 0 10px var(--accent-glow-strong);
-        }
-
-        .slider-handle-btn {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 44px;
-            height: 44px;
-            background-color: var(--bg-deep);
-            border: 2px solid var(--accent);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 10px var(--accent-glow);
-            transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
-        }
-
-        .slider-arrows {
-            position: relative;
-            width: 14px;
-            height: 14px;
-        }
-
-        .slider-arrows::before,
-        .slider-arrows::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%) rotate(45deg);
-            width: 8px;
-            height: 8px;
-            border-style: solid;
-            border-color: var(--accent);
-            transition: border-color 0.15s ease;
-        }
-
-        .slider-arrows::before {
-            left: -4px;
-            border-width: 0 0 2px 2px;
-        }
-
-        .slider-arrows::after {
-            right: -4px;
-            border-width: 2px 2px 0 0;
-        }
-
-        .slider-range-input {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: ew-resize;
-            z-index: 4;
-        }
-
-        /* Hover styles on handle and arrows when range input is hovered */
-        .slider-range-input:hover ~ .slider-separator .slider-handle-btn {
-            transform: translate(-50%, -50%) scale(1.1);
-            border-color: #ffffff;
-            box-shadow: 0 0 25px rgba(255, 255, 255, 0.2), 0 0 10px rgba(255, 255, 255, 0.4);
-        }
-
-        .slider-range-input:hover ~ .slider-separator .slider-arrows::before,
-        .slider-range-input:hover ~ .slider-separator .slider-arrows::after {
-            border-color: #ffffff;
-        }
-
-        /* Glassmorphic Tech Labels */
-        .slider-label {
-            position: absolute;
-            top: 20px;
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            padding: 6px 12px;
-            background-color: rgba(10, 11, 14, 0.85);
-            backdrop-filter: blur(8px);
-            border: var(--border-thin);
-            z-index: 3;
-            letter-spacing: 1px;
-            pointer-events: none;
-            border-radius: 4px;
-        }
-
-        .slider-label.before {
-            left: 20px;
-            border-left: 2px solid #ff4d4d;
-            color: #ff4d4d;
-        }
-
-        .slider-label.after {
-            right: 20px;
-            border-right: 2px solid var(--accent);
-            color: var(--accent);
-        }
-
-        /* Features Section (Card Grid) */
-        .features {
-            padding: 100px 0;
-            border-bottom: var(--border-thin);
-            position: relative;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 30px;
-        }
-
-        /* Glassmorphic Card Styling */
-        .feature-card {
-            background: var(--bg-surface);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: var(--border-thin);
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            position: relative;
-            overflow: hidden;
-            transition: var(--transition-smooth);
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(204, 255, 0, 0.05) 0%, transparent 50%);
-            opacity: 0;
-            transition: var(--transition-smooth);
-            pointer-events: none;
-        }
-
-        .feature-card:hover {
-            border: var(--border-accent);
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(204, 255, 0, 0.03), 0 0 2px rgba(204, 255, 0, 0.2);
-        }
-
-        .feature-card:hover::before {
-            opacity: 1;
-        }
-
-        .card-number {
-            font-family: var(--font-mono);
-            font-size: 0.85rem;
-            color: var(--accent);
-            letter-spacing: 2px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .card-number svg {
-            width: 24px;
-            height: 24px;
-            stroke: var(--accent);
-            stroke-width: 1.5;
-            fill: none;
-        }
-
-        h3 {
-            font-family: var(--font-headings);
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .feature-card p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        /* Call-To-Action & Footer Section */
-        .footer-cta {
-            padding: 100px 0 60px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 40px;
-            position: relative;
-        }
-
-        /* Glow orb in footer background */
-        .footer-cta::before {
-            content: '';
-            position: absolute;
-            bottom: 0%;
-            left: 50%;
-            transform: translate(-50%, 0);
-            width: 400px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(204, 255, 0, 0.04) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .cta-box {
-            max-width: 720px;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-            align-items: center;
-        }
-
-        .cta-box h2 {
-            font-size: 2.8rem;
-            line-height: 1.1;
-        }
-
-        .cta-box p {
-            font-size: 1.15rem;
-            color: var(--text-secondary);
-            max-width: 620px;
-        }
-
-        .cta-box p strong {
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        /* Footer links area */
-        .footer-nav {
-            width: 100%;
-            border-top: var(--border-thin);
-            padding-top: 40px;
-            margin-top: 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 30px;
-        }
-
-        .footer-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: var(--transition-smooth);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .footer-link:hover {
-            color: var(--accent);
-        }
-
-        .footer-copyright {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .indicator-dot {
-            width: 8px;
-            height: 8px;
-            background-color: var(--accent);
-            border-radius: 50%;
-            animation: pulse-glow 2s infinite ease-in-out;
-        }
-
-        @keyframes pulse-glow {
-            0% { opacity: 0.3; box-shadow: 0 0 0 0 rgba(204, 255, 0, 0); }
-            50% { opacity: 1; box-shadow: 0 0 8px 2px var(--accent-glow-strong); }
-            100% { opacity: 0.3; box-shadow: 0 0 0 0 rgba(204, 255, 0, 0); }
-        }
-
-        /* SVG Pixelate Filter definitions */
-        .svg-filters {
-            position: absolute;
-            width: 0;
-            height: 0;
-            visibility: hidden;
-        }
-
-        /* Portfolio Section */
-        .portfolio {
-            padding: 100px 0;
-            border-bottom: var(--border-thin);
-            position: relative;
-        }
-
-        .portfolio-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            margin-top: 40px;
-        }
-
-        .portfolio-card {
-            background: var(--bg-surface);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: var(--border-thin);
-            border-radius: 4px;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            transition: var(--transition-smooth);
-            position: relative;
-        }
-
-        .portfolio-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(204, 255, 0, 0.03) 0%, transparent 60%);
-            opacity: 0;
-            transition: var(--transition-smooth);
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .portfolio-card:hover {
-            border: var(--border-accent);
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(204, 255, 0, 0.04), 0 0 15px rgba(204, 255, 0, 0.15);
-        }
-
-        .portfolio-card:hover::before {
-            opacity: 1;
-        }
-
-        .portfolio-img-wrapper {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 16 / 10;
-            overflow: hidden;
-            border-bottom: var(--border-thin);
-        }
-
-        .portfolio-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: var(--transition-smooth);
-        }
-
-        .portfolio-card:hover .portfolio-img {
-            transform: scale(1.04);
-        }
-
-        .portfolio-tag {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            font-family: var(--font-mono);
-            font-size: 0.65rem;
-            font-weight: 700;
-            color: var(--accent);
-            background-color: rgba(10, 11, 14, 0.85);
-            backdrop-filter: blur(8px);
-            border: var(--border-accent);
-            padding: 4px 10px;
-            border-radius: 2px;
-            letter-spacing: 1px;
-            z-index: 2;
-        }
-
-        .portfolio-card-content {
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            flex-grow: 1;
-        }
-
-        .portfolio-card h3 {
-            font-family: var(--font-headings);
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .portfolio-card p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        /* Contacts Section */
-        .contacts {
-            padding: 100px 0;
-            border-bottom: var(--border-thin);
-            position: relative;
-        }
-
-        .contacts-grid {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 24px;
-            flex-wrap: wrap;
-            margin-top: 40px;
-        }
-
-        .contact-btn {
-            font-family: var(--font-headings);
-            font-size: 1.05rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            text-decoration: none;
-            letter-spacing: 1px;
-            padding: 18px 38px;
-            border-radius: 4px;
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            transition: var(--transition-bounce);
-            cursor: pointer;
-            box-sizing: border-box;
-        }
-
-        .contact-icon {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
-        }
-
-        /* Telegram Neon Button */
-        .btn-tg {
-            color: #00e5ff;
-            background-color: rgba(0, 229, 255, 0.03);
-            border: 2px solid rgba(0, 229, 255, 0.3);
-            box-shadow: 0 0 10px rgba(0, 229, 255, 0.05);
-        }
-
-        .btn-tg:hover {
-            color: var(--bg-deep);
-            background-color: #00e5ff;
-            border-color: #00e5ff;
-            box-shadow: 0 0 25px rgba(0, 229, 255, 0.5);
-            transform: translateY(-3px);
-        }
-
-        /* VK Neon Button */
-        .btn-vk {
-            color: #2787f5;
-            background-color: rgba(39, 135, 245, 0.03);
-            border: 2px solid rgba(39, 135, 245, 0.3);
-            box-shadow: 0 0 10px rgba(39, 135, 245, 0.05);
-        }
-
-        .btn-vk:hover {
-            color: var(--text-primary);
-            background-color: #2787f5;
-            border-color: #2787f5;
-            box-shadow: 0 0 25px rgba(39, 135, 245, 0.5);
-            transform: translateY(-3px);
-        }
-
-        /* Kwork Neon Button */
-        .btn-kwork {
-            color: var(--accent);
-            background-color: rgba(204, 255, 0, 0.03);
-            border: 2px solid rgba(204, 255, 0, 0.3);
-            box-shadow: 0 0 10px rgba(204, 255, 0, 0.05);
-        }
-
-        .btn-kwork:hover {
-            color: var(--bg-deep);
-            background-color: var(--accent);
-            border-color: var(--accent);
-            box-shadow: 0 0 25px rgba(204, 255, 0, 0.5);
-            transform: translateY(-3px);
-        }
-
-        /* Responsive Styles */
-        @media (max-width: 968px) {
-            h1 {
-                font-size: 2.8rem;
-            }
-            .hero {
-                grid-template-columns: 1fr;
-                gap: 50px;
-                padding-bottom: 60px;
-            }
-            .hero-graphic {
-                order: -1; /* Display graphic above text on tablet */
-            }
-            .cad-frame {
-                max-width: 100%;
-            }
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-            .portfolio-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 24px;
-            }
-        }
-
-        @media (max-width: 640px) {
-            header {
-                padding: 0 20px;
-            }
-            main {
-                padding-top: 100px;
-            }
-            h1 {
-                font-size: 2.2rem;
-            }
-            h2 {
-                font-size: 1.8rem;
-            }
-            .cta-box h2 {
-                font-size: 2rem;
-            }
-            .btn-cta {
-                width: 100%;
-                justify-content: center;
-                font-size: 1rem;
-                padding: 14px 24px;
-            }
-            .feature-card {
-                padding: 24px;
-            }
-            .footer-nav {
-                flex-direction: column;
-                gap: 20px;
-                align-items: flex-start;
-            }
-            .footer-links {
-                flex-direction: column;
-                gap: 15px;
-            }
-            .slider-wrapper {
-                aspect-ratio: 16 / 9;
-            }
-            .slider-label {
-                font-size: 0.65rem;
-                top: 10px;
-            }
-            .slider-label.before { left: 10px; }
-            .slider-label.after { right: 10px; }
-            .portfolio-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            .contacts-grid {
-                flex-direction: column;
-                gap: 16px;
-                width: 100%;
-            }
-            .contact-btn {
-                width: 100%;
-                justify-content: center;
-                padding: 16px 24px;
-                font-size: 0.95rem;
-            }
-            .portfolio {
-                padding: 60px 0;
-            }
-            .contacts {
-                padding: 60px 0;
-            }
-        }
-    </style>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- External Stylesheet -->
+    <link rel="stylesheet" href="main_style.css">
 </head>
+
 <body>
 
-    <!-- SVG Pixelation / Compression Filter -->
-    <svg class="svg-filters">
-        <defs>
-            <filter id="raster-pixelate" x="0%" y="0%" width="100%" height="100%">
-                <!-- Blur SVG path to merge coordinates -->
-                <feGaussianBlur in="SourceGraphic" stdDeviation="4.5" result="blurred" />
-                
-                <!-- Use a threshold filter to create hard jagged edges -->
-                <feComponentTransfer in="blurred" result="posterized">
-                    <feFuncA type="discrete" tableValues="0 0 0 0.8 1 1 1 1" />
-                </feComponentTransfer>
-                
-                <!-- Inject low frequency turbulence noise to make curves uneven/lumpy -->
-                <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="2" result="noise" />
-                <feDisplacementMap in="posterized" in2="noise" scale="12" xChannelSelector="R" yChannelSelector="G" result="displaced" />
-                
-                <!-- Slightly blend color with noise to look like a scanned JPEG -->
-                <feColorMatrix type="matrix" values="
-                    0.8 0 0 0 0.1
-                    0   0.3 0 0 0.1
-                    0   0   0.3 0 0.1
-                    0   0   0   1 0" />
-            </filter>
-        </defs>
-    </svg>
-
-    <!-- Header -->
-    <header>
-        <a href="#" class="logo">
-            ВЕКТОР <span class="logo-divider">/</span> ГЕОМЕТРИЯ
-            <div class="logo-dot"></div>
-        </a>
-        <a href="https://t.me/idistardesign" target="_blank" rel="noopener noreferrer" class="btn-telegram-header">
-            <svg viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .24z"/>
-            </svg>
-            t.me/idistardesign
-        </a>
+    <!-- ========== HEADER ========== -->
+    <header class="header" id="header">
+        <div class="header-inner">
+            <a href="index.html" class="logo" id="logoHome">
+                <span class="logo-mark"></span>
+                iDistar
+            </a>
+            <nav class="nav" id="mainNav">
+                <a href="#services" class="nav-link">Услуги</a>
+                <a href="#advantages" class="nav-link">Преимущества</a>
+                <a href="vector.html" class="nav-link nav-link--accent" id="navVector">Вектор</a>
+                <a href="#contacts" class="nav-link">Контакты</a>
+            </nav>
+            <button class="burger" id="burgerBtn" aria-label="Открыть меню">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
     </header>
 
-    <!-- Main Container -->
-    <main>
-        
-        <!-- Hero Section -->
-        <section class="hero">
-            <div class="hero-content">
-                <div class="tagline">ЧПУ • Лазер • Плоттер</div>
-                <h1>Профессиональная векторизация для ЧПУ, лазера и плоттеров</h1>
-                <p class="hero-subtitle">
-                    Ручная отрисовка растра и эскизов любой сложности в <strong>идеальные замкнутые контуры</strong>. Без мусора от автотрассировки. Файлы полностью готовы к запуску на производстве.
-                </p>
-                <a href="https://t.me/idistardesign" target="_blank" rel="noopener noreferrer" class="btn-cta">
-                    Заказать проект в Telegram
-                    <svg viewBox="0 0 24 24">
-                        <path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-8.29-1.42 1.42L16.86 11H5v2z"/>
-                    </svg>
-                </a>
+    <!-- ========== HERO ========== -->
+    <section class="hero" id="hero">
+        <div class="hero-bg">
+            <img src="https://images.unsplash.com/photo-1639322537228-f710d846310a?w=1400&q=80"
+                alt="Абстрактные золотые потоки данных" class="hero-bg-img" loading="eager">
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="hero-content">
+            <p class="hero-tag">Дизайн · Данные · Разработка</p>
+            <h1 class="hero-title">
+                Визуальная и техническая
+                <em>поддержка бизнеса</em>
+            </h1>
+            <p class="hero-sub">Векторная графика, парсинг данных, разработка сайтов — комплексные решения от
+                специалиста с коммерческим опытом и пониманием бизнес-процессов.</p>
+            <div class="hero-actions">
+                <a href="#services" class="btn btn--primary" id="heroServicesBtn">Услуги</a>
+                <a href="#contacts" class="btn btn--outline" id="heroContactBtn">Связаться</a>
             </div>
-            
-            <div class="hero-graphic">
-                <div class="cad-frame">
-                    <div class="cad-corners"></div>
-                    <div class="cad-header">
-                        <span>SYS.VIEW: VECTOR_EDITOR</span>
-                        <span>NODES: 6 ACTIVE</span>
-                    </div>
-                    
-                    <div class="cad-grid-display">
-                        <!-- Clean, minimalist interactive vector SVG -->
-                        <svg id="interactive-svg" viewBox="0 0 300 300" width="100%" height="100%" style="overflow: visible; cursor: default;">
-                            <!-- Connection lines / geometric vector paths -->
-                            <path id="outer-poly" d="" stroke="var(--accent)" stroke-width="2" fill="none" stroke-linejoin="round" />
-                            <path id="tri-1" d="" stroke="rgba(204, 255, 0, 0.4)" stroke-width="1" fill="none" stroke-linejoin="round" />
-                            <path id="tri-2" d="" stroke="rgba(204, 255, 0, 0.4)" stroke-width="1" fill="none" stroke-linejoin="round" />
-                            
-                            <!-- Internal connection dashed wireframe spokes -->
-                            <line id="spoke-1" x1="0" y1="0" x2="0" y2="0" stroke="rgba(204, 255, 0, 0.3)" stroke-width="1" stroke-dasharray="2 2" />
-                            <line id="spoke-2" x1="0" y1="0" x2="0" y2="0" stroke="rgba(204, 255, 0, 0.3)" stroke-width="1" stroke-dasharray="2 2" />
-                            <line id="spoke-3" x1="0" y1="0" x2="0" y2="0" stroke="rgba(204, 255, 0, 0.3)" stroke-width="1" stroke-dasharray="2 2" />
+        </div>
+    </section>
 
-                            <!-- Interactive Anchor Nodes -->
-                            <circle class="anchor-point" data-index="0" cx="60" cy="50" r="6" stroke="var(--accent)" stroke-width="2" fill="#0a0b0e" cursor="move" />
-                            <circle class="anchor-point" data-index="1" cx="60" cy="200" r="6" stroke="var(--accent)" stroke-width="2" fill="#0a0b0e" cursor="move" />
-                            <circle class="anchor-point" data-index="2" cx="150" cy="70" r="6" stroke="var(--accent)" stroke-width="2" fill="#0a0b0e" cursor="move" />
-                            <circle class="anchor-point" data-index="3" cx="240" cy="200" r="6" stroke="var(--accent)" stroke-width="2" fill="#0a0b0e" cursor="move" />
-                            <circle class="anchor-point" data-index="4" cx="240" cy="50" r="6" stroke="var(--accent)" stroke-width="2" fill="#0a0b0e" cursor="move" />
-                            <circle class="anchor-point" data-index="5" cx="150" cy="260" r="6" stroke="var(--accent)" stroke-width="2" fill="#0a0b0e" cursor="move" />
-                        </svg>
-                    </div>
-                    
-                    <div class="cad-footer-text">
-                        <span id="cad-coords">X: 60.00 Y: 50.00</span>
-                        <span>SYS.MODE: INTERACTIVE</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Portfolio Showcase (Before/After Section) -->
-        <section class="showcase" id="showcase">
+    <!-- ========== SERVICES ========== -->
+    <section class="services" id="services">
+        <div class="container">
             <div class="section-header">
-                <h2>Результат в деталях</h2>
-                <p class="section-subtitle">Посмотрите, как грязный растр превращается в идеальные кривые Безье.</p>
+                <p class="section-tag">Направления</p>
+                <h2>Услуги</h2>
+                <p class="section-sub">Три направления, которые закрывают ключевые потребности малого и среднего
+                    бизнеса.</p>
             </div>
 
-            <!-- Interative Comparison Slider -->
-            <div class="slider-wrapper" id="sliderContainer">
-                <!-- Bottom Image: Clean Vector Output -->
-                <img src="after.png" alt="Clean Vector Output" class="slider-img img-before">
-                
-                <!-- Top Image Container (with overflow: hidden) -->
-                <div class="slider-after-container" id="afterContainer">
-                    <!-- Top Image: Client Raster Draft -->
-                    <img src="before.jpg" alt="Client Raster Draft" class="slider-img img-after" id="afterImage">
-                </div>
-                
-                <!-- Visual Divider Line and Handle -->
-                <div class="slider-separator" id="sliderSeparator">
-                    <div class="slider-handle-btn">
-                        <div class="slider-arrows"></div>
+            <div class="services-grid">
+                <!-- Card 1: Vector -->
+                <article class="service-card" id="serviceVector">
+                    <div class="service-card__img-wrap">
+                        <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=800"
+                            alt="Премиальная инженерная графика и чертежи" class="service-card__img" loading="lazy">
                     </div>
-                </div>
-                
-                <!-- Invisible overlay input range for smooth native mouse/touch tracking -->
-                <input type="range" min="0" max="100" value="50" class="slider-range-input" id="sliderRange">
-                
-                <!-- Glassmorphic Tech Labels -->
-                <div class="slider-label before">РАСТР (ИСХОДНИК)</div>
-                <div class="slider-label after">ВЕКТОР (ЧИСТЫЙ КОНТУР)</div>
-            </div>
-        </section>
+                    <div class="service-card__body">
+                        <div class="service-card__icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 19l7-7 3 3-7 7-3-3z" />
+                                <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
+                                <path d="M2 2l7.586 7.586" />
+                                <circle cx="11" cy="11" r="2" />
+                            </svg>
+                        </div>
+                        <h3>Технический дизайн и Вектор</h3>
+                        <p>Ручная отрисовка растра и эскизов в идеальные замкнутые контуры для ЧПУ, лазера и плоттеров.
+                            Подготовка макетов в DXF, AI, EPS, SVG, CDR.</p>
+                        <a href="vector.html" class="btn btn--primary btn--sm" id="goToVector">Смотреть портфолио →</a>
+                    </div>
+                </article>
 
-        <!-- Features Section -->
-        <section class="features">
+                <!-- Card 2: Parsing -->
+                <article class="service-card" id="serviceParsing">
+                    <div class="service-card__img-wrap">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80"
+                            alt="Аналитические данные и графики" class="service-card__img" loading="lazy">
+                    </div>
+                    <div class="service-card__body">
+                        <div class="service-card__icon">
+                            <!-- Database / data-flow line-art icon -->
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <ellipse cx="12" cy="5" rx="9" ry="3" />
+                                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
+                                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
+                            </svg>
+                        </div>
+                        <h3>Автоматизация и Парсинг данных</h3>
+                        <p>Сбор цен конкурентов, контактных данных, анализ ассортимента маркетплейсов. Структурированные
+                            данные в удобных форматах для принятия решений.</p>
+                        <span class="btn btn--ghost btn--sm">Скоро</span>
+                    </div>
+                </article>
+
+                <!-- Card 3: Landing -->
+                <article class="service-card" id="serviceLanding">
+                    <div class="service-card__img-wrap">
+                        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&q=80"
+                            alt="Современный премиум-офис" class="service-card__img" loading="lazy">
+                    </div>
+                    <div class="service-card__body">
+                        <div class="service-card__icon">
+                            <!-- Browser / layout line-art icon -->
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                <line x1="3" y1="9" x2="21" y2="9" />
+                                <line x1="9" y1="21" x2="9" y2="9" />
+                            </svg>
+                        </div>
+                        <h3>Разработка Landing Page</h3>
+                        <p>Создание посадочных страниц с премиальным дизайном, адаптивной версткой, SEO-оптимизацией и
+                            высокой конверсией. Быстрый запуск за 3–5 дней.</p>
+                        <span class="btn btn--ghost btn--sm">Скоро</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== ADVANTAGES ========== -->
+    <section class="advantages" id="advantages">
+        <div class="container">
             <div class="section-header">
-                <h2>Преимущества для производства</h2>
-                <p class="section-subtitle">Почему файлы, подготовленные вручную, сохраняют ваши деньги, станки и нервы.</p>
+                <p class="section-tag">Почему я</p>
+                <h2>Преимущества</h2>
+                <p class="section-sub">Коммерческий бэкграунд и технические навыки в одном лице.</p>
             </div>
 
-            <div class="features-grid">
-                <!-- Card 1 -->
-                <div class="feature-card">
-                    <div class="card-number">
-                        <span>01 / GEOMETRY</span>
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 2L2 22h20L12 2zm0 3.99L18.8 19H5.2L12 5.99z"/>
+            <div class="adv-grid">
+                <div class="adv-card" id="adv1">
+                    <div class="adv-card__num">01</div>
+                    <div class="adv-card__icon">
+                        <!-- Briefcase line-art -->
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="7" width="20" height="14" rx="2" />
+                            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                            <line x1="12" y1="12" x2="12" y2="12.01" />
                         </svg>
                     </div>
-                    <h3>Математическая точность</h3>
-                    <p>Контуры полностью замкнуты, дуги и прямые построены строго по геометрии. Ваш станок пойдет по линиям плавно, без рывков, вибраций и брака материала.</p>
+                    <h3>Понимание бизнес-процессов</h3>
+                    <p>Опыт работы в коммерции позволяет не просто выполнять задачу, а предлагать решения, которые
+                        реально увеличивают продажи и экономят бюджет.</p>
                 </div>
 
-                <!-- Card 2 -->
-                <div class="feature-card">
-                    <div class="card-number">
-                        <span>02 / OPTIMIZATION</span>
-                        <svg viewBox="0 0 24 24">
-                            <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/>
+                <div class="adv-card" id="adv2">
+                    <div class="adv-card__num">02</div>
+                    <div class="adv-card__icon">
+                        <!-- Shopping-bag / marketplace line-art -->
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                            <line x1="3" y1="6" x2="21" y2="6" />
+                            <path d="M16 10a4 4 0 0 1-8 0" />
                         </svg>
                     </div>
-                    <h3>Чистый код файла</h3>
-                    <p>Минимальное количество опорных точек. Файлы не перегружают оперативную память и программное обеспечение станков, исключая зависания при импорте.</p>
+                    <h3>Опыт на маркетплейсах</h3>
+                    <p>Практический опыт продаж на Wildberries, Ozon и других площадках. Знаю, какие данные нужны для
+                        аналитики и как их правильно собирать.</p>
                 </div>
 
-                <!-- Card 3 -->
-                <div class="feature-card">
-                    <div class="card-number">
-                        <span>03 / COMPATIBILITY</span>
-                        <svg viewBox="0 0 24 24">
-                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-4-4h2v2h-2v-2zm0-4h2v2h-2v-2zm0-4h2v2h-2V7zm-8 8h6v2H7v-2zm0-4h6v2H7v-2zm0-4h6v2H7V7z"/>
+                <div class="adv-card" id="adv3">
+                    <div class="adv-card__num">03</div>
+                    <div class="adv-card__icon">
+                        <!-- Crosshair / precision line-art -->
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="22" y1="12" x2="18" y2="12" />
+                            <line x1="6" y1="12" x2="2" y2="12" />
+                            <line x1="12" y1="6" x2="12" y2="2" />
+                            <line x1="12" y1="22" x2="12" y2="18" />
                         </svg>
                     </div>
-                    <h3>Любые форматы</h3>
-                    <p>Подготовка макетов в DXF, AI, EPS, SVG, CDR строго по спецификации вашего оборудования. Контуры разложены по технологическим слоям (резка / гравировка).</p>
+                    <h3>Технический дизайн без автотрассировки</h3>
+                    <p>Каждый вектор отрисован вручную — идеальная геометрия, минимальное количество опорных точек,
+                        чистый код файла без мусора.</p>
                 </div>
 
-                <!-- Card 4 -->
-                <div class="feature-card">
-                    <div class="card-number">
-                        <span>04 / VELOCITY</span>
-                        <svg viewBox="0 0 24 24">
-                            <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+                <div class="adv-card" id="adv4">
+                    <div class="adv-card__num">04</div>
+                    <div class="adv-card__icon">
+                        <!-- Layers / comprehensive line-art -->
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                            <polyline points="2 17 12 22 22 17" />
+                            <polyline points="2 12 12 17 22 12" />
                         </svg>
                     </div>
-                    <h3>Скорость и надежность</h3>
-                    <p>Профессиональная оцифровка чертежей, набросков, фотографий и подготовка готовых файлов к производственному циклу от 24 часов с момента согласования.</p>
+                    <h3>Комплексный подход</h3>
+                    <p>Не нужно искать отдельного дизайнера, парсера и верстальщика. Все направления объединены под
+                        одной крышей с единым контактом и стандартом качества.</p>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Portfolio Section -->
-        <section class="portfolio" id="portfolio">
+    <!-- ========== CONTACTS ========== -->
+    <section class="contacts" id="contacts">
+        <div class="container">
             <div class="section-header">
-                <h2>Портфолио</h2>
-                <p class="section-subtitle">Примеры выполненных работ по ручной векторизации и черчению.</p>
-            </div>
-
-            <div class="portfolio-grid">
-                <!-- Card 1 -->
-                <div class="portfolio-card">
-                    <div class="portfolio-img-wrapper">
-                        <img src="portfolio_logo.svg" alt="Отрисовка логотипов в вектор" class="portfolio-img">
-                        <div class="portfolio-tag">LOGO</div>
-                    </div>
-                    <div class="portfolio-card-content">
-                        <h3>Отрисовка логотипов в вектор</h3>
-                        <p>Перевод растровых товарных знаков и фирменных стилей в чистую векторную графику без искажений.</p>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="portfolio-card">
-                    <div class="portfolio-img-wrapper">
-                        <img src="portfolio_cnc.svg" alt="Точные чертежи для ЧПУ" class="portfolio-img">
-                        <div class="portfolio-tag">CAD / CNC</div>
-                    </div>
-                    <div class="portfolio-card-content">
-                        <h3>Точные чертежи для ЧПУ</h3>
-                        <p>Проектирование и оцифровка чертежей под лазерную резку, фрезеровку и гравировку с идеальными стыками.</p>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="portfolio-card">
-                    <div class="portfolio-img-wrapper">
-                        <img src="portfolio_sketch.svg" alt="Векторизация эскизов" class="portfolio-img">
-                        <div class="portfolio-tag">SKETCH</div>
-                    </div>
-                    <div class="portfolio-card-content">
-                        <h3>Векторизация эскизов</h3>
-                        <p>Воссоздание ручных набросков и эскизов в безупречные кривые Безье, готовые для плоттера и печати.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contacts Section -->
-        <section class="contacts" id="contacts">
-            <div class="section-header">
+                <p class="section-tag">Связь</p>
                 <h2>Контакты</h2>
-                <p class="section-subtitle">Выберите удобный способ связи, чтобы обсудить ваш проект или сделать заказ.</p>
+                <p class="section-sub">Выберите удобный способ связи, чтобы обсудить ваш проект.</p>
             </div>
 
             <div class="contacts-grid">
-                <a href="https://t.me/idistardesign" target="_blank" rel="noopener noreferrer" class="contact-btn btn-tg">
-                    <svg class="contact-icon" viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .24z"/>
+                <a href="https://t.me/idistardesign" class="contact-btn contact-btn--tg" id="contactTelegram">
+                    <svg class="contact-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .24z" />
                     </svg>
                     <span>Telegram</span>
                 </a>
-                <a href="https://vk.com/idistardesing" target="_blank" rel="noopener noreferrer" class="contact-btn btn-vk">
-                    <svg class="contact-icon" viewBox="0 0 24 24">
-                        <path d="M15.66 22H8.34C3.73 22 2 20.27 2 15.66V8.34C2 3.73 3.73 2 8.34 2h7.32C20.27 2 22 3.73 22 8.34v7.32c0 4.61-1.73 6.34-6.34 6.34zM6.79 7.3H4.05c.13 6.24 3.25 9.99 8.72 9.99h.31v-3.57c2.01.2 3.53 1.67 4.14 3.57h2.84c-.78-2.84-2.83-4.41-4.11-5.01 1.28-.74 3.08-2.54 3.51-4.98h-2.58c-.56 1.98-2.22 3.78-3.8 3.95V7.3H10.5v6.92c-1.6-.4-3.62-2.34-3.71-6.92Z"/>
+                <a href="https://vk.com/idistardesing" class="contact-btn contact-btn--vk" id="contactVK">
+                    <svg class="contact-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M15.66 22H8.34C3.73 22 2 20.27 2 15.66V8.34C2 3.73 3.73 2 8.34 2h7.32C20.27 2 22 3.73 22 8.34v7.32c0 4.61-1.73 6.34-6.34 6.34zM6.79 7.3H4.05c.13 6.24 3.25 9.99 8.72 9.99h.31v-3.57c2.01.2 3.53 1.67 4.14 3.57h2.84c-.78-2.84-2.83-4.41-4.11-5.01 1.28-.74 3.08-2.54 3.51-4.98h-2.58c-.56 1.98-2.22 3.78-3.8 3.95V7.3H10.5v6.92c-1.6-.4-3.62-2.34-3.71-6.92Z" />
                     </svg>
                     <span>ВКонтакте</span>
                 </a>
-                <a href="https://kwork.ru/vector-tracing/52056564/professionalnaya-ruchnaya-otrisovka-v-vektore-trassirovka-v-illustrator" target="_blank" rel="noopener noreferrer" class="contact-btn btn-kwork">
-                    <svg class="contact-icon" viewBox="0 0 24 24">
-                        <path d="M14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06M17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z"/>
+                <a href="https://kwork.ru/user/idistar" class="contact-btn contact-btn--kwork" id="contactKwork">
+                    <svg class="contact-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M14.06 9.02l.92.92L5.92 19H5v-.92l9.06-9.06M17.66 3c-.25 0-.51.1-.7.29l-1.83 1.83 3.75 3.75 1.83-1.83c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29zm-3.6 3.19L3 17.25V21h3.75L17.81 9.94l-3.75-3.75z" />
                     </svg>
-                    <span>Заказать на Kwork</span>
+                    <span>Kwork</span>
                 </a>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Call to Action & Footer -->
-        <section class="footer-cta">
-            <div class="cta-box">
-                <h2>Нужен идеальный макет под резку прямо сейчас?</h2>
-                <p>Пришлите исходник — оценю сложность и сориентирую по точным срокам и стоимости <strong>за 15 минут</strong>.</p>
-                
-                <a href="https://t.me/idistardesign" target="_blank" rel="noopener noreferrer" class="btn-cta">
-                    Написать в Telegram
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .24z"/>
-                    </svg>
-                </a>
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer" id="footer">
+        <div class="container footer-inner">
+            <div class="footer-copy">
+                <span class="footer-dot"></span>
+                <span>© 2026 iDistar</span>
             </div>
+            <nav class="footer-links">
+                <a href="vector.html" class="footer-link">Вектор →</a>
+                <a href="#services" class="footer-link">Услуги</a>
+                <a href="#contacts" class="footer-link">Контакты</a>
+            </nav>
+        </div>
+    </footer>
 
-            <!-- Footer Navbar -->
-            <div class="footer-nav">
-                <div class="footer-copyright">
-                    <div class="indicator-dot"></div>
-                    <span>© 2026 ВЕКТОР / ГЕОМЕТРИЯ</span>
-                </div>
-                
-                <div class="footer-links">
-                    <a href="https://kwork.ru/vector-tracing/52056564/professionalnaya-ruchnaya-otrisovka-v-vektore-trassirovka-v-illustrator" target="_blank" rel="noopener noreferrer" class="footer-link">
-                        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style="display:inline-block; vertical-align:middle; margin-right:4px;">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
-                        </svg>
-                        Безопасная сделка на Kwork
-                    </a>
-                    <a href="mailto:info@vector-geometry.ru" class="footer-link">info@vector-geometry.ru</a>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- JS Interaction Layer -->
+    <!-- ========== SCRIPTS ========== -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const container = document.getElementById('sliderContainer');
-            const range = document.getElementById('sliderRange');
-            const afterContainer = document.getElementById('afterContainer');
-            const afterImage = document.getElementById('afterImage');
-            const separator = document.getElementById('sliderSeparator');
-
-            function updateSlider() {
-                const val = range.value;
-                afterContainer.style.width = `${val}%`;
-                separator.style.left = `${val}%`;
-            }
-
-            function syncImageSize() {
-                if (container && afterImage) {
-                    afterImage.style.width = `${container.offsetWidth}px`;
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                const target = document.querySelector(a.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth' });
                 }
-            }
-
-            if (range) {
-                range.addEventListener('input', updateSlider);
-                range.addEventListener('change', updateSlider);
-            }
-
-            // Initial sync & update
-            updateSlider();
-            syncImageSize();
-
-            // Resize listener
-            window.addEventListener('resize', () => {
-                syncImageSize();
             });
-
-            // -------------------------------------------------------------
-            // New Interactive Vector Geometry (Hero Section) Script
-            // -------------------------------------------------------------
-            const svg = document.getElementById('interactive-svg');
-            if (svg) {
-                const anchors = svg.querySelectorAll('.anchor-point');
-                const outerPoly = document.getElementById('outer-poly');
-                const tri1 = document.getElementById('tri-1');
-                const tri2 = document.getElementById('tri-2');
-                const spoke1 = document.getElementById('spoke-1');
-                const spoke2 = document.getElementById('spoke-2');
-                const spoke3 = document.getElementById('spoke-3');
-                const coordsDisplay = document.getElementById('cad-coords');
-
-                // Initialize the points array matching the SVG anchor element attributes
-                let points = [];
-                anchors.forEach((anchor) => {
-                    points.push({
-                        x: parseFloat(anchor.getAttribute('cx')),
-                        y: parseFloat(anchor.getAttribute('cy')),
-                        element: anchor
-                    });
-                });
-
-                let activeIndex = null;
-
-                // Dynamically redraw all lines in the star/hexagon geometry
-                function updateLines() {
-                    if (points.length < 6) return;
-
-                    // 1. Draw the main Cyber Lime outer polygon
-                    let dOuter = `M ${points[0].x} ${points[0].y}`;
-                    for (let i = 1; i < points.length; i++) {
-                        dOuter += ` L ${points[i].x} ${points[i].y}`;
-                    }
-                    dOuter += ' Z';
-                    outerPoly.setAttribute('d', dOuter);
-
-                    // 2. Draw Triangle 1 (Points 0 -> 2 -> 4 -> Z)
-                    const dTri1 = `M ${points[0].x} ${points[0].y} L ${points[2].x} ${points[2].y} L ${points[4].x} ${points[4].y} Z`;
-                    tri1.setAttribute('d', dTri1);
-
-                    // 3. Draw Triangle 2 (Points 1 -> 3 -> 5 -> Z)
-                    const dTri2 = `M ${points[1].x} ${points[1].y} L ${points[3].x} ${points[3].y} L ${points[5].x} ${points[5].y} Z`;
-                    tri2.setAttribute('d', dTri2);
-
-                    // 4. Draw central spokes connecting opposite vertices
-                    spoke1.setAttribute('x1', points[0].x);
-                    spoke1.setAttribute('y1', points[0].y);
-                    spoke1.setAttribute('x2', points[3].x);
-                    spoke1.setAttribute('y2', points[3].y);
-
-                    spoke2.setAttribute('x1', points[1].x);
-                    spoke2.setAttribute('y1', points[1].y);
-                    spoke2.setAttribute('x2', points[4].x);
-                    spoke2.setAttribute('y2', points[4].y);
-
-                    spoke3.setAttribute('x1', points[2].x);
-                    spoke3.setAttribute('y1', points[2].y);
-                    spoke3.setAttribute('x2', points[5].x);
-                    spoke3.setAttribute('y2', points[5].y);
-                }
-
-                // Initial render
-                updateLines();
-
-                // Convert screen mouse/touch coordinates relative to the responsive SVG viewport
-                function getSVGCoords(e) {
-                    const pt = svg.createSVGPoint();
-                    if (e.touches && e.touches[0]) {
-                        pt.x = e.touches[0].clientX;
-                        pt.y = e.touches[0].clientY;
-                    } else {
-                        pt.x = e.clientX;
-                        pt.y = e.clientY;
-                    }
-                    // matrixTransform dynamically maps screen coords to SVG viewBox coordinates
-                    const cursorpt = pt.matrixTransform(svg.getScreenCTM().inverse());
-                    return { x: cursorpt.x, y: cursorpt.y };
-                }
-
-                function onStart(e, index) {
-                    activeIndex = index;
-                    points[activeIndex].element.classList.add('active');
-                    e.preventDefault(); // Prevents touch scrolling and text selection
-                }
-
-                function onMove(e) {
-                    if (activeIndex === null) return;
-                    const coords = getSVGCoords(e);
-                    
-                    // Constrain points inside viewBox [0, 300] to prevent points leaving the container
-                    const padding = 6;
-                    const x = Math.max(padding, Math.min(300 - padding, coords.x));
-                    const y = Math.max(padding, Math.min(300 - padding, coords.y));
-
-                    // Update data model
-                    points[activeIndex].x = x;
-                    points[activeIndex].y = y;
-
-                    // Update DOM element positions
-                    points[activeIndex].element.setAttribute('cx', x);
-                    points[activeIndex].element.setAttribute('cy', y);
-
-                    // Update real-time CAD coordinates display in the footer
-                    if (coordsDisplay) {
-                        coordsDisplay.textContent = `X: ${x.toFixed(2)} Y: ${y.toFixed(2)}`;
-                    }
-
-                    updateLines();
-                }
-
-                function onEnd() {
-                    if (activeIndex !== null) {
-                        points[activeIndex].element.classList.remove('active');
-                        activeIndex = null;
-                    }
-                }
-
-                // Bind touch and mouse events to the handles
-                anchors.forEach((anchor, i) => {
-                    anchor.addEventListener('mousedown', (e) => onStart(e, i));
-                    anchor.addEventListener('touchstart', (e) => onStart(e, i), { passive: false });
-                });
-
-                // Bind movements globally to window for smooth drag-and-drop tracking
-                window.addEventListener('mousemove', onMove);
-                window.addEventListener('touchmove', onMove, { passive: false });
-                window.addEventListener('mouseup', onEnd);
-                window.addEventListener('touchend', onEnd);
-            }
         });
+
+        // Mobile burger menu toggle
+        const burger = document.getElementById('burgerBtn');
+        const nav = document.getElementById('mainNav');
+        if (burger && nav) {
+            burger.addEventListener('click', () => {
+                burger.classList.toggle('active');
+                nav.classList.toggle('open');
+            });
+            nav.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    burger.classList.remove('active');
+                    nav.classList.remove('open');
+                });
+            });
+        }
+
+        // Header background on scroll
+        const header = document.getElementById('header');
+        if (header) {
+            window.addEventListener('scroll', () => {
+                header.classList.toggle('scrolled', window.scrollY > 40);
+            });
+        }
     </script>
+
 </body>
+
 </html>
